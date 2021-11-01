@@ -1,10 +1,14 @@
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
+import { Store } from '../context.store';
 
 const HomeScreen = () => {
   const history = useHistory();
+  const { id } = useParams();
+  const { state, dispatch } = useContext(Store);
 
   const [products, setProducts] = useState([]);
 
@@ -13,8 +17,16 @@ const HomeScreen = () => {
     setProducts(data);
   }, []);
 
-  const addToCartHandler = () => {
-    console.log('well ');
+  const addToCart = async (product) => {
+    const existItem = state.cart.cartItems.find((x) => x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    history.push(`/cart/${product._id}`);
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('sory we are out of stock');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
   };
 
   return (
@@ -44,7 +56,7 @@ const HomeScreen = () => {
                     <button
                       className="hover:border-gray-400 px-3 rounded-md shadow-lg
                     hover:bg-blue-200 transition-all delay-100 ease-in-out hover:text-opacity-5 border"
-                      onClick={addToCartHandler}
+                      onClick={() => addToCart(product)}
                     >
                       add to cart
                     </button>
