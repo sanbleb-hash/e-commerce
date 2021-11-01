@@ -3,8 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import { useContext } from 'react';
+import { Store } from '../context.store';
+
 const DetailPage = () => {
+  const { dispatch } = useContext(Store);
   const [product, setProduct] = useState({});
+  const [qty, setqty] = useState(0);
 
   const history = useHistory();
   const { id } = useParams();
@@ -15,6 +20,16 @@ const DetailPage = () => {
     };
     fetchProduct();
   }, []);
+
+  const addToCart = async () => {
+    history.push(`/cart/${id}?qty=${qty}`);
+    const { data } = await axios.get(`/api/products/${id}`);
+    if (data.countInStock < 0) {
+      window.alert('sory we are out of stock');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, qty } });
+  };
 
   if (!product) {
     return (
@@ -73,7 +88,6 @@ const DetailPage = () => {
                   <span>
                     {product?.countInStock > 0 ? (
                       <span className="text-green-600 inline-block">
-                        {' '}
                         in stock
                       </span>
                     ) : (
@@ -87,9 +101,27 @@ const DetailPage = () => {
                   <span>price : </span>
                   <span>$ {product?.price}</span>
                 </span>
+                {product.countInStock > 0 && (
+                  <span className="py-2">
+                    QTY :
+                    <select
+                      value={qty}
+                      onChange={(e) => setqty(e.target.value)}
+                      className="w-10 bg-black text-white ml-2 focus:outline-none active:bg-black/70 hover:bg-black/75 "
+                    >
+                      {[...Array(product.countInStock).keys()].map((x) => (
+                        <option key={x + 1} value={x + 1}>
+                          {x + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </span>
+                )}
                 <button
-                  className="block bg-blue-400 text-white mt-3 rounded-sm active:hover:bg-blue-600 active:scale-105 
-              hover:bg-blue-600 transition-all delay-75"
+                  className="block
+                  md:min-w-full bg-gray-700 text-white mt-3  py-2 px-4 active:hover:bg-gray-400 active:scale-105 
+              hover:bg-gray-600 transition-all delay-75 "
+                  onClick={addToCart}
                 >
                   add to cart
                 </button>

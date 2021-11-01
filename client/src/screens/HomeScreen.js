@@ -1,18 +1,17 @@
 import { useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
-
-import { fecthProducts } from '../redux/slices/productsSlice';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
+import axios from 'axios';
 
 const HomeScreen = () => {
   const history = useHistory();
-  const products = useSelector((state) => state.products);
 
-  const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    dispatch(fecthProducts());
-  }, [dispatch]);
+  useEffect(async () => {
+    const { data } = await axios.get('/api/products');
+    setProducts(data);
+  }, []);
 
   const addToCartHandler = () => {
     console.log('well ');
