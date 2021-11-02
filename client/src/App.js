@@ -4,6 +4,7 @@ import HomeScreen from './screens/HomeScreen';
 import DetailsPage from './screens/DetailsPage';
 import CartScreen from './screens/CartScreen';
 import Login from './screens/Login';
+import Register from './screens/Register';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
             </Route>
             <Route path="/login">
               <Login />
+            </Route>
+            <Route path="/register">
+              <Register />
             </Route>
           </main>
         </Switch>

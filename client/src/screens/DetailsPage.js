@@ -107,7 +107,8 @@ const DetailPage = () => {
                     <select
                       value={qty}
                       onChange={(e) => setqty(e.target.value)}
-                      className="w-10 bg-black text-white ml-2 focus:outline-none active:bg-black/70 hover:bg-black/75 "
+                      className="w-10 focus:ring-0 h-8 pt-2 
+                      bg-black text-white ml-2 focus:outline-none active:bg-black/70 hover:bg-black/75 "
                     >
                       {[...Array(product.countInStock).keys()].map((x) => (
                         <option key={x + 1} value={x + 1}>

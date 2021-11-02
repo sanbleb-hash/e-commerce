@@ -60,7 +60,8 @@ const CartScreen = () => {
                             onChange={(e) =>
                               updateCartHandler(item, e.target.value)
                             }
-                            className="w-10 bg-black text-white ml-2 focus:outline-none active:bg-black/70 hover:bg-black/75 "
+                            className="w-10 mt-2
+                            focus:ring-0 h- bg-black text-white ml-2 focus:outline-none active:bg-black/70 hover:bg-black/75 "
                           >
                             {[...Array(item.countInStock).keys()].map((x) => (
                               <option key={x + 1} value={x + 1}>
@@ -92,7 +93,7 @@ const CartScreen = () => {
                     {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                   </span>
                   <button
-                    className="border-gray-100 bg-yellow-600 w-full py-2 font-semibold hover:bg-opacity-80
+                    className="border-gray-100 bg-yellow-400 w-full py-2 font-semibold hover:bg-opacity-80
                     transition-all ease-out delay-75
                   active:scale-x-105 text-gray-700 border-2 bg-transparent "
                   >
