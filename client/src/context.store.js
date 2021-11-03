@@ -3,7 +3,14 @@ import { createContext } from 'react';
 import Cookies from 'js-cookie';
 export const Store = createContext();
 const initialState = {
-  cart: { cartItems: [] },
+  cart: {
+    cartItems: Cookies.get('cartItems')
+      ? JSON.parse(Cookies.get('cartItems'))
+      : [],
+  },
+  userInfo: Cookies.get('userInfo')
+    ? JSON.parse(Cookies.get('userInfo'))
+    : null,
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -27,6 +34,16 @@ const reducer = (state, action) => {
       Cookies.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+
+    case 'USER_LOGIN':
+      return { ...state, userInfo: action.payload };
+
+    case 'USER_LOGOUT':
+      return {
+        ...state,
+        userInfo: null,
+        cart: { cartItems: [] },
+      };
 
     default:
       return state;
